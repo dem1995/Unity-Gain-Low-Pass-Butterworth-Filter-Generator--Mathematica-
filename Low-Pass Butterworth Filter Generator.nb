@@ -1,0 +1,408 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     16818,        400]
+NotebookOptionsPosition[     16421,        382]
+NotebookOutlinePosition[     16800,        398]
+CellTagsIndexPosition[     16757,        395]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"*", "nth"}], "-", 
+    RowBox[{"Order", " ", "Low"}], "-", 
+    RowBox[{"pass", " ", "Unity"}], "-", 
+    RowBox[{
+    "gain", " ", "Butterworth", " ", "Polynomial", " ", "with", " ", 
+     "Specified", " ", "Cutoff", " ", "Frequency", " ", "Finder"}]}], "**)"}],
+   "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "*", "Created", " ", "by", " ", "David", " ", "Estes", " ", "McKnight"}], 
+    ",", " ", 
+    RowBox[{
+     RowBox[{"April", "/", "May"}], " ", "2018"}]}], "**)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"*", "\n", "polyOrder"}], " ", "=", " ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+      "InputString", "[", "\"\<Enter the order of the desired polynomial\>\"",
+        "]"}], "\[IndentingNewLine]", 
+      RowBox[{"FormPage", "[", 
+       RowBox[{
+        RowBox[{"\"\<order\>\"", "\[Rule]", " ", "\"\<Number\>\""}], ",", " ", 
+        RowBox[{
+         RowBox[{"unityButterworth", "[", 
+          RowBox[{"#order", " ", ",", " ", 
+           RowBox[{"2000", "*", "2", "*", "Pi"}]}], "]"}], "&"}]}], "]"}]}], "//",
+      "N"}]}], "**)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"FormPage", "[", 
+     RowBox[{
+      RowBox[{"\"\<order\>\"", "\[Rule]", " ", "\"\<Number\>\""}], ",", " ", 
+      RowBox[{
+       RowBox[{"unityButterworth", "[", 
+        RowBox[{"#order", " ", ",", " ", 
+         RowBox[{"2000", "*", "2", "*", "Pi"}]}], "]"}], "&"}]}], "]"}], " ", 
+    "//", "N"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"*", "Find", " ", "the", " ", "nth"}], "-", 
+     RowBox[{
+     "order", " ", "Butterworth", " ", "filter", " ", "with", " ", "the", " ",
+       "given", " ", "cutoff", " ", "frequency"}]}], "**)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"unityButterworth", "[", 
+     RowBox[{"n_", ",", " ", "wc_"}], "]"}], ":=", "\[IndentingNewLine]", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"n0", "=", "n"}], ",", " ", 
+        RowBox[{"wc0", "=", "wc"}]}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"(*", 
+       RowBox[{"*", "Find", " ", "the", " ", "required", " ", "denominator"}],
+        "**)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"denom", "=", 
+        RowBox[{"getButterworthDenom", "[", 
+         RowBox[{"n0", ",", " ", "wc0"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"num", " ", "=", " ", 
+        RowBox[{
+         RowBox[{"Function", "[", 
+          RowBox[{"k", ",", " ", 
+           RowBox[{"denom", "/.", 
+            RowBox[{"s", "\[Rule]", "k"}]}]}], "]"}], "[", "0", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"num", "/", "denom"}]}]}], "\[IndentingNewLine]", "\t\t", 
+     "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"unityButterworth", "[", 
+     RowBox[{"18", ",", " ", 
+      RowBox[{"2000", "*", "2", "*", "Pi"}]}], "]"}], "//", "N"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "*", "Retrieve", " ", "the", " ", "denominator", " ", "of", " ", "an", 
+      " ", "nth"}], "-", 
+     RowBox[{
+     "order", " ", "Butterworth", " ", "filter", " ", "with", " ", "the", " ",
+       "given", " ", "corner", " ", "frequency"}]}], "**)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"getButterworthDenom", "[", 
+     RowBox[{"n_", ",", " ", "wc_"}], "]"}], ":=", 
+    RowBox[{"Expand", "[", 
+     RowBox[{"factorForm", "[", 
+      RowBox[{
+       RowBox[{"leftHalfPlaneRoots", "[", 
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"magSimpButterSquared", "[", 
+           RowBox[{"n", ",", "wc"}], " ", "]"}]}], ",", " ", "s"}], "]"}], 
+       ",", "s"}], "]"}], "]"}]}], " ", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "*", "Returns", " ", "the", " ", "magnitude", " ", "of", " ", "a", " ", 
+      "primitive", " ", "nth"}], "-", 
+     RowBox[{
+     "order", " ", "Butterworth", " ", "filter", " ", "with", " ", "the", " ",
+       "given", " ", "cutoff", " ", "frequency"}]}], "**)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"magSimpButterSquared", "[", 
+      RowBox[{"n_", ",", " ", "wc_"}], "]"}], ":=", 
+     RowBox[{"1", "/", 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"-", "1"}], ")"}], "^", "n"}], "*", 
+         RowBox[{
+          RowBox[{"s", "^", 
+           RowBox[{"(", 
+            RowBox[{"2", "n"}], ")"}]}], "/", 
+          RowBox[{"wc", "^", 
+           RowBox[{"(", 
+            RowBox[{"2", "n"}], ")"}]}]}]}]}], ")"}]}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+      "*", "Puts", " ", "roots", " ", "into", " ", "the", " ", "form", " ", 
+       RowBox[{"(", 
+        RowBox[{"s", "-", "root1"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"s", "-", "root2"}], ")"}]}], "..."}], 
+     RowBox[{"(", 
+      RowBox[{"s", "-", "lastRoot"}], ")"}]}], "**)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"factorForm", "[", 
+      RowBox[{"rootsList_", ",", " ", "var_"}], "]"}], ":=", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Times", "@@", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"var", "-", "#"}], "&"}], "/@", "rootsList"}], ")"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"*", "Grabs", " ", "the", " ", "left"}], "-", "half", "-", 
+     RowBox[{"plane", " ", "roots"}]}], "**)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"leftHalfPlaneRoots", "[", 
+      RowBox[{"rootsList_", ",", " ", "s_"}], "]"}], ":=", 
+     RowBox[{"Select", "[", 
+      RowBox[{
+       RowBox[{"rootsToList", "[", 
+        RowBox[{"rootsList", ",", "s"}], "]"}], ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Re", "[", "#", "]"}], "\[LessEqual]", "0"}], "&"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "*", "Creates", " ", "a", " ", "list", " ", "of", " ", "the", " ", 
+     "roots"}], "**)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"rootsToList", "[", 
+      RowBox[{"a_", ",", "var_"}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"rootsToDisjunction", "[", 
+       RowBox[{"a", ",", "var"}], "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", 
+        RowBox[{"-", "1"}]}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"rootsToDisjunction", "[", 
+      RowBox[{"a_", ",", " ", "var_"}], "]"}], ":=", 
+     RowBox[{"Apply", "[", 
+      RowBox[{"List", ",", 
+       RowBox[{"ComplexExpand", "[", 
+        RowBox[{"Roots", "[", 
+         RowBox[{
+          RowBox[{"a", "\[Equal]", "0"}], ",", "var"}], "]"}], "]"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.734730012363744*^9, 3.7347302609051304`*^9}, {
+   3.734730298116007*^9, 3.734730311938738*^9}, {3.7347304184198637`*^9, 
+   3.7347304507787156`*^9}, {3.734730497180685*^9, 3.7347306308676653`*^9}, {
+   3.7347306672629185`*^9, 3.734730668468799*^9}, {3.734730767315551*^9, 
+   3.7347307809146504`*^9}, {3.734730833863039*^9, 3.7347308581018896`*^9}, {
+   3.734730914459811*^9, 3.7347310308660145`*^9}, {3.734731127819899*^9, 
+   3.73473123198594*^9}, {3.7347312701982193`*^9, 3.7347313046718984`*^9}, {
+   3.7347313464966545`*^9, 3.734731360139326*^9}, {3.7347313915242686`*^9, 
+   3.7347313936269484`*^9}, {3.7347314790184765`*^9, 
+   3.7347315329228697`*^9}, {3.734731578172787*^9, 3.7347315798353834`*^9}, {
+   3.734731614590116*^9, 3.734731632903121*^9}, {3.7347316916205072`*^9, 
+   3.734731718345674*^9}, {3.734731850906597*^9, 3.734731864076326*^9}, {
+   3.7347319398345284`*^9, 3.7347319959517765`*^9}, {3.7347320506038413`*^9, 
+   3.734732054527797*^9}, {3.734732237473858*^9, 3.734732319144089*^9}, {
+   3.734732395712973*^9, 3.7347323976346593`*^9}, {3.734732431229498*^9, 
+   3.734732451010354*^9}, {3.73473254811438*^9, 3.7347325503133416`*^9}, {
+   3.7347326968340125`*^9, 3.7347328933431163`*^9}, {3.734732932599963*^9, 
+   3.73473293408267*^9}, {3.73473303997661*^9, 3.7347330408423986`*^9}, {
+   3.734733123768852*^9, 3.7347331480967803`*^9}, 3.7347332697194147`*^9, {
+   3.7347335783947363`*^9, 3.7347335829478226`*^9}, {3.7347341812054625`*^9, 
+   3.734734207768314*^9}, {3.734734241566268*^9, 3.734734257727916*^9}, {
+   3.734734335577115*^9, 3.73473453597033*^9}, {3.734735572726325*^9, 
+   3.734735609775831*^9}, {3.734735707980073*^9, 3.734735719606929*^9}, {
+   3.734735777062009*^9, 3.73473604538605*^9}, {3.734736077243288*^9, 
+   3.7347363633049183`*^9}, {3.7347364040952015`*^9, 3.734737095955987*^9}, {
+   3.7347371281055126`*^9, 3.734737176217408*^9}, {3.7347372498867626`*^9, 
+   3.7347372551937103`*^9}, {3.7347373310599575`*^9, 
+   3.7347373509132676`*^9}, {3.7347375031847115`*^9, 3.734737529793942*^9}, {
+   3.734737589764324*^9, 3.7347377977566924`*^9}, {3.734737894109599*^9, 
+   3.7347378942224255`*^9}, {3.73473792745022*^9, 3.734738356331741*^9}, {
+   3.734738387497266*^9, 3.7347385038050547`*^9}, {3.7347385352686234`*^9, 
+   3.734738637206182*^9}, {3.734738681533259*^9, 3.734738783323325*^9}, {
+   3.7347388226740446`*^9, 3.7347388274649115`*^9}, {3.734738868812006*^9, 
+   3.7347389118916283`*^9}, {3.7347389756979218`*^9, 
+   3.7347390413954315`*^9}, {3.73473913772447*^9, 3.7347391883953934`*^9}, {
+   3.734739224672737*^9, 3.734739261192981*^9}, {3.7347392976579747`*^9, 
+   3.7347393652169437`*^9}, {3.7347393966367273`*^9, 3.734739399865472*^9}, {
+   3.7347394864379644`*^9, 3.734739535787115*^9}, {3.734739571857973*^9, 
+   3.734739625313326*^9}, {3.7347396581576366`*^9, 3.734739786749447*^9}, {
+   3.7347404079681892`*^9, 3.734740408769956*^9}, 3.738176823146064*^9, {
+   3.7381771501907167`*^9, 3.7381771539177227`*^9}, {3.7381772730392485`*^9, 
+   3.7381772996830273`*^9}, {3.738181918851066*^9, 3.738181939368538*^9}, {
+   3.738182428104494*^9, 3.738182465072522*^9}, {3.738182502078325*^9, 
+   3.7381825626701765`*^9}, {3.7381825961952467`*^9, 
+   3.7381825965344915`*^9}, {3.738182745596218*^9, 3.738182958322055*^9}, {
+   3.7381830239687805`*^9, 3.738183054969203*^9}, {3.7381831166405897`*^9, 
+   3.7381831322930136`*^9}, {3.747386595133226*^9, 3.747386598780501*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  DynamicModuleBox[{Forms`FormPage`PackagePrivate`temp$$ = Association[
+   "order" -> Association["Interpreter" -> "Number", "Input" -> ""]], 
+   Forms`FormPage`PackagePrivate`vals$$ = Association[], 
+   Forms`FormPage`PackagePrivate`valid$$ = False, 
+   Forms`FormPage`PackagePrivate`form2$$ = FormObject[
+    Association["order" -> Association["Interpreter" -> "Number"]], 
+    Association[]], Forms`FormPage`PackagePrivate`valid2$$}, 
+   DynamicBox[ToBoxes[
+     With[{Forms`FormPage`PackagePrivate`formpane$ = Panel[
+         Forms`getFormLayout[
+          Forms`PackageScope`bindableForm[
+          Forms`FormPage`PackagePrivate`temp$$, 
+           Evaluate[Forms`FormPage`PackagePrivate`form2$$], None, None -> 
+           Forms`PackageScope`completeAction[
+            Forms`FormPage`PackagePrivate`form2$$, 
+             Forms`FormPage`PackagePrivate`temp$$, 
+             Forms`FormPage`PackagePrivate`vals$$, (
+             Unset[Forms`FormPage`PackagePrivate`vals$$]; 
+             Forms`FormPage`PackagePrivate`vals$$ = #; 
+             Forms`FormPage`PackagePrivate`valid2$$ = Not[
+                TrueQ[Forms`PackageScope`$DontComplete]])& , {}]]]], 
+       Forms`FormPage`PackagePrivate`resultpane$ = Framed[
+         If[
+         Forms`FormPage`PackagePrivate`valid$$ = 
+          And[Forms`FormPage`PackagePrivate`vals$$ =!= Association[], 
+            FreeQ[
+             Values[Forms`FormPage`PackagePrivate`vals$$], 
+             Alternatives[
+              Blank[Failure], Forms`PackageScope`fieldHidden]], 
+            TrueQ[Forms`FormPage`PackagePrivate`valid2$$]], 
+          Unset[Forms`FormPage`PackagePrivate`valid2$$]; Style[
+            ($CellContext`unityButterworth[
+             Slot["order"], (2000. 2.) 3.141592653589793]& )[
+            Forms`FormPage`PackagePrivate`vals$$], "Output", "StandardForm"], 
+          Style["Invalid form", "Message"]], FrameStyle -> Lighter[Gray], 
+         Background -> White]}, 
+      Panel[
+       Column[
+        Forms`doLayout[
+        Automatic, Forms`FormPage`PackagePrivate`valid$$, {
+         Forms`FormPage`PackagePrivate`formpane$, 
+          Forms`FormPage`PackagePrivate`resultpane$, 
+          Panel[
+           Item[
+            Row[{
+              Spacer[0], 
+              DefaultButton[
+               Forms`PackageScope`completeAction[
+               Forms`FormPage`PackagePrivate`form2$$, 
+                Forms`FormPage`PackagePrivate`temp$$, 
+                Forms`FormPage`PackagePrivate`vals$$, (
+                Unset[Forms`FormPage`PackagePrivate`vals$$]; 
+                Forms`FormPage`PackagePrivate`vals$$ = #; 
+                Forms`FormPage`PackagePrivate`valid2$$ = Not[
+                   TrueQ[Forms`PackageScope`$DontComplete]])& , {}]]}], 
+            Alignment -> Right]]}]]]], StandardForm],
+    ImageSizeCache->{284., {52., 59.}},
+    TrackedSymbols:>{Forms`FormPage`PackagePrivate`vals$$}],
+   DynamicModuleValues:>{}],
+  FormPage[
+   FormObject[
+    Association["order" -> Association["Interpreter" -> "Number"]], 
+    Association[]], $CellContext`unityButterworth[
+    Slot["order"], (2000. 2.) 3.141592653589793]& ],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellChangeTimes->{{3.738182902953512*^9, 3.738182955056728*^9}, {
+   3.7381830194345617`*^9, 3.7381830613332376`*^9}, {3.7381831201863494`*^9, 
+   3.7381831339030867`*^9}, 3.738188783042717*^9}],
+
+Cell[BoxData[
+ RowBox[{"6.106291777587463`*^73", "/", 
+  RowBox[{"(", 
+   RowBox[{"6.106291777587463`*^73", "+", 
+    RowBox[{"5.575344146731821`*^70", " ", "s"}], "+", 
+    RowBox[{"2.5452814479476093`*^67", " ", 
+     SuperscriptBox["s", "2"]}], "+", 
+    RowBox[{"7.706925776227337`*^63", " ", 
+     SuperscriptBox["s", "3"]}], "+", 
+    RowBox[{"1.7320618887348675`*^60", " ", 
+     SuperscriptBox["s", "4"]}], "+", 
+    RowBox[{"3.0647220913135784`*^56", " ", 
+     SuperscriptBox["s", "5"]}], "+", 
+    RowBox[{"4.4206582500231093`*^52", " ", 
+     SuperscriptBox["s", "6"]}], "+", 
+    RowBox[{"5.311490490978809`*^48", " ", 
+     SuperscriptBox["s", "7"]}], "+", 
+    RowBox[{"5.386461585669931`*^44", " ", 
+     SuperscriptBox["s", "8"]}], "+", 
+    RowBox[{"4.643684093426384`*^40", " ", 
+     SuperscriptBox["s", "9"]}], "+", 
+    RowBox[{"3.411016646900378`*^36", " ", 
+     SuperscriptBox["s", "10"]}], "+", 
+    RowBox[{"2.129986997121602`*^32", " ", 
+     SuperscriptBox["s", "11"]}], "+", 
+    RowBox[{"1.1226070308304456`*^28", " ", 
+     SuperscriptBox["s", "12"]}], "+", 
+    RowBox[{"4.9284707872413994`*^23", " ", 
+     SuperscriptBox["s", "13"]}], "+", 
+    RowBox[{"1.7638626562229258`*^19", " ", 
+     SuperscriptBox["s", "14"]}], "+", 
+    RowBox[{"4.9700734632870106`*^14", " ", 
+     SuperscriptBox["s", "15"]}], "+", 
+    RowBox[{"1.039435907962296`*^10", " ", 
+     SuperscriptBox["s", "16"]}], "+", 
+    RowBox[{"144182.93296796927`", " ", 
+     SuperscriptBox["s", "17"]}], "+", 
+    SuperscriptBox["s", "18"]}], ")"}]}]], "Output",
+ CellChangeTimes->{{3.738182902953512*^9, 3.738182955056728*^9}, {
+   3.7381830194345617`*^9, 3.7381830613332376`*^9}, {3.7381831201863494`*^9, 
+   3.7381831339030867`*^9}, 3.738188787892705*^9}]
+}, Open  ]]
+},
+WindowSize->{1536, 781},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+Magnification:>0.95 Inherited,
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 10624, 242, 677, "Input"],
+Cell[11207, 266, 3436, 71, 127, "Output"],
+Cell[14646, 339, 1759, 40, 57, "Output"]
+}, Open  ]]
+}
+]
+*)
+
